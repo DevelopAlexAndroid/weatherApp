@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context=".ui.activity.weather.WeatherActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/city_toolbar"
+                    style="@style/TextCityToolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weather" />
+
+                <TextView
+                    android:text="@string/o"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_gravity="left"
+                    android:textColor="@color/textColorTitle"
+                    app:srcCompat="@mipmap/ic_launcher">
+
+                </TextView>
+
+                <RadioGroup
+                    android:id="@+id/toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/outline"
+                    android:checkedButton="@+id/switch_C"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/switch_C"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/switch_off"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:paddingLeft="14dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="14dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/c"
+                        android:textColor="@drawable/switch_text"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/switch_F"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/switch_on"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:paddingLeft="14dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="14dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/f"
+                        android:textColor="@drawable/switch_text"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/switch_city"
+                style="@style/TextCityTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_city"
+                app:layout_constraintStart_toStartOf="@+id/linear_layout"
+                app:layout_constraintTop_toBottomOf="@+id/linear_layout" />
+
+            <TextView
+                android:id="@+id/geolocation"
+                style="@style/TextCityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/geolocation"
+                app:layout_constraintEnd_toEndOf="@+id/linear_layout"
+                app:layout_constraintTop_toBottomOf="@+id/linear_layout" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/geolocation"
+                app:layout_constraintEnd_toStartOf="@+id/geolocation"
+                app:layout_constraintTop_toBottomOf="@+id/linear_layout"
+                app:srcCompat="@drawable/location_icon" />
+
+            <sib.sibintek.ru.weatherapp.ui.customView.TextInfoContainer
+                android:id="@+id/text_container_wind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                app:layout_constraintBottom_toTopOf="@+id/text_container_humidity"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <sib.sibintek.ru.weatherapp.ui.customView.TextInfoContainer
+                android:id="@+id/text_container_humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <sib.sibintek.ru.weatherapp.ui.customView.TextInfoContainer
+                android:id="@+id/text_container_pressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                app:layout_constraintBottom_toTopOf="@+id/text_container_rain"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <sib.sibintek.ru.weatherapp.ui.customView.TextInfoContainer
+                android:id="@+id/text_container_rain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/image_weather"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@mipmap/ic_launcher_round"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/progress"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/temp"
+                style="@style/TextTemp"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/progress"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="14^" />
+
+            <TextView
+                android:id="@+id/weather_name"
+                style="@style/TextSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_weather" />
+
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/CustomProgress"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/error_message"
+                style="@style/TextError"
+                android:text="@string/message_error"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
