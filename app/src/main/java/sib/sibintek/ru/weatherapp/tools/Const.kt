@@ -28,10 +28,7 @@ object Const {
     /**Время по истечению которого, данные в базу будут считаться устаревшими*/
     const val TIME_CORRECT_DATA = 10 * 60 * 1000
 
-
-    //Флаг о смене градусов и фаренгейта
-    var FLAG_FAHRENHEIT = false
-    //Флаг говорящий
+    //Флаг говорящий статус обработки json из файла
     var FLAG_JSON_PARSING = false
 
 }

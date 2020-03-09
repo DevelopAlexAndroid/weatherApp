@@ -16,12 +16,17 @@ class TextInfoContainer @JvmOverloads constructor(
     init {
         LayoutInflater.from(context)
             .inflate(R.layout.text_info_container, this, true)
-
         orientation = VERTICAL
+        val at = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.TextInfoContainer,
+            0, 0
+        )
+
+        title.text = at.getString(R.styleable.TextInfoContainer_containerName)
     }
 
-    fun setData(titleText: String, infoTex: String){
-        title.text = titleText
+    fun setData(infoTex: String){
         info.text = infoTex
         container.visibility = View.VISIBLE
     }

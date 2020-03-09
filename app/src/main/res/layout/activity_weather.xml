@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:textColor="@color/textColorTitle"
                     app:srcCompat="@mipmap/ic_launcher">
 
@@ -70,9 +70,9 @@
                         android:background="@drawable/switch_off"
                         android:button="@null"
                         android:gravity="center"
-                        android:paddingLeft="14dp"
+                        android:paddingStart="14dp"
                         android:paddingTop="3dp"
-                        android:paddingRight="14dp"
+                        android:paddingEnd="14dp"
                         android:paddingBottom="3dp"
                         android:text="@string/c"
                         android:textColor="@drawable/switch_text"
@@ -89,9 +89,9 @@
                         android:background="@drawable/switch_on"
                         android:button="@null"
                         android:gravity="center"
-                        android:paddingLeft="14dp"
+                        android:paddingStart="14dp"
                         android:paddingTop="3dp"
-                        android:paddingRight="14dp"
+                        android:paddingEnd="14dp"
                         android:paddingBottom="3dp"
                         android:text="@string/f"
                         android:textColor="@drawable/switch_text"
@@ -124,13 +124,15 @@
                 app:layout_constraintBottom_toBottomOf="@+id/geolocation"
                 app:layout_constraintEnd_toStartOf="@+id/geolocation"
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout"
-                app:srcCompat="@drawable/location_icon" />
+                app:srcCompat="@drawable/location_icon"
+                android:contentDescription="@string/image_geolocation" />
 
             <sib.sibintek.ru.weatherapp.ui.customView.TextInfoContainer
                 android:id="@+id/text_container_wind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                app:containerName="@string/wind"
                 app:layout_constraintBottom_toTopOf="@+id/text_container_humidity"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -139,6 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                app:containerName="@string/humidity"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -147,6 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                app:containerName="@string/pressure"
                 app:layout_constraintBottom_toTopOf="@+id/text_container_rain"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -155,6 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                app:containerName="@string/rain"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -167,7 +172,8 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/progress"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/image_weather" />
 
             <TextView
                 android:id="@+id/temp"

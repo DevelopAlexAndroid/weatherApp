@@ -22,4 +22,13 @@
        android:layout_width="300dp"
        android:layout_height="400dp"/>
 
+   <TextView
+       android:id="@+id/cancel"
+       android:text="@string/cancel"
+       style="@style/TitleFragment"
+       android:layout_gravity="center"
+       android:layout_width="wrap_content"
+       android:layout_margin="8dp"
+       android:layout_height="wrap_content"/>
+
 </LinearLayout>

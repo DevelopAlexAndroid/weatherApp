@@ -10,12 +10,12 @@ import com.google.android.gms.location.LocationServices
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_weather.*
 import sib.sibintek.ru.weatherapp.R
+
 import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
 import sib.sibintek.ru.weatherapp.provides.GeolocationStatus
 import sib.sibintek.ru.weatherapp.provides.LocationProviders
 import sib.sibintek.ru.weatherapp.provides.LocationProviders.Companion.PERMISSION_ID
 import sib.sibintek.ru.weatherapp.tools.Const
-import sib.sibintek.ru.weatherapp.tools.Const.FLAG_FAHRENHEIT
 import sib.sibintek.ru.weatherapp.tools.Const.FLAG_JSON_PARSING
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment.Companion.TAG_CHOICE_CITY
@@ -29,8 +29,8 @@ class WeatherActivity : DaggerAppCompatActivity(),
 
     @Inject
     lateinit var presenter: WeatherPresenter
-    private var fragment = ChoiceCityFragment()
 
+    private var fragment = ChoiceCityFragment()
     private var locationProviders = LocationProviders()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,6 @@ class WeatherActivity : DaggerAppCompatActivity(),
         setContentView(R.layout.activity_weather)
         //TODO Рефакторинг парсинга и передачи данных
         fragment.parseCityJson(this)
-
         presenter.onCreate(this)
         addListener()
     }
@@ -51,13 +50,17 @@ class WeatherActivity : DaggerAppCompatActivity(),
     override fun setData(weatherModel: WeatherModel) {
         Log.d(Const.TAG_WEATHER, "Activity.setData")
 
-        temp.text = weatherModel.temp.toString()
         weather_name.text = weatherModel.description
         city_toolbar.text = weatherModel.name
-        text_container_wind.setData(getString(R.string.wind), weatherModel.speedWind.toString())
-        text_container_pressure.setData(getString(R.string.pressure), weatherModel.pressure.toString())
-        text_container_humidity.setData(getString(R.string.humidity), weatherModel.humidity.toString())
-        text_container_rain.setData(getString(R.string.rain), "2 %") // нет данных с сервера
+        text_container_wind.setData(weatherModel.speedWind.toString())
+        text_container_pressure.setData(weatherModel.pressure.toString())
+        text_container_humidity.setData(weatherModel.humidity.toString())
+        text_container_rain.setData("2 %") // нет данных с сервера
+        //В приоритете цельсий поэтому устанавливаем на switch на цельсий
+        toggle.check(R.id.switch_C)
+        switchClickable(false)
+        temp.text = weatherModel.temp.toString().substringBefore(".")
+
         image_weather.setImageResource(getImage(weatherModel.icon!!))
         visibleUi(View.VISIBLE, View.INVISIBLE, View.GONE)
     }
@@ -77,8 +80,8 @@ class WeatherActivity : DaggerAppCompatActivity(),
             .show()
     }
 
-    override fun showNewDegrees(value: Int) {
-        temp.text = value.toString()
+    override fun showNewDegrees(value: Double) {
+        temp.text = value.toString().substringBefore(".")
     }
 
     override fun createLocationListenerAndGetLocal() {
@@ -117,26 +120,23 @@ class WeatherActivity : DaggerAppCompatActivity(),
 
     private fun addListener() {
         switch_city.setOnClickListener {
-            if (FLAG_JSON_PARSING) {
+            if (FLAG_JSON_PARSING && !fragment.isAdded) {
                 fragment.addListener(this)
                 fragment.show(supportFragmentManager, TAG_CHOICE_CITY)
             } else {
-                showMessage(R.string.app_name)
+                showMessage(R.string.loading_city)
             }
         }
         geolocation.setOnClickListener { presenter.clickMyLocation() }
         switch_C.setOnClickListener {
-            if (FLAG_FAHRENHEIT) {
-                FLAG_FAHRENHEIT = false
-                presenter.clickSwitchTemp(temp.text.toString().toInt())
-            }
+            switchClickable(false)
+            presenter.clickSwitchTemp(temp.text.toString().toDouble(), false)
         }
         switch_F.setOnClickListener {
-            if (!FLAG_FAHRENHEIT) {
-                FLAG_FAHRENHEIT = true
-                presenter.clickSwitchTemp(temp.text.toString().toInt())
-            }
+            switchClickable(true)
+            presenter.clickSwitchTemp(temp.text.toString().toDouble(), true)
         }
+        switchClickable(false)
         swipe_refresh.setOnRefreshListener {
             Log.d(Const.TAG_WEATHER, "WeatherActivity.SwipeToRefresh ")
             Handler().postDelayed({ swipe_refresh.isRefreshing = false }, 1000)
@@ -164,6 +164,11 @@ class WeatherActivity : DaggerAppCompatActivity(),
             "03n" -> R.drawable.cloud
             else -> R.drawable.def
         }
+    }
+
+    private fun switchClickable(isFahrenheit: Boolean) {
+        switch_F.isClickable = !isFahrenheit
+        switch_C.isClickable = isFahrenheit
     }
 
 }

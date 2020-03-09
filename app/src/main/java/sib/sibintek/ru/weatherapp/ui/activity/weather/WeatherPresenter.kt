@@ -10,7 +10,6 @@ import sib.sibintek.ru.weatherapp.domain.repository.WeatherRepository
 import sib.sibintek.ru.weatherapp.tools.Const
 import sib.sibintek.ru.weatherapp.tools.Const.CALL_SUCCES
 import sib.sibintek.ru.weatherapp.tools.Const.FIRST_START
-import sib.sibintek.ru.weatherapp.tools.Const.FLAG_FAHRENHEIT
 import sib.sibintek.ru.weatherapp.tools.Const.KEY_LOCATION_OR_CITY
 import sib.sibintek.ru.weatherapp.tools.Const.KEY_TIME_LAST_CAll
 import sib.sibintek.ru.weatherapp.tools.Const.KEY_USER_CHOICE_CITY
@@ -55,13 +54,13 @@ constructor(
         compositeDisposable.clear()
     }
 
-    override fun clickSwitchTemp(value: Int) {
+    override fun clickSwitchTemp(value: Double, isFahrenheit: Boolean) {
         Log.d(Const.TAG_WEATHER, "Presenter.clickSwitchButton")
         //Преобразования в кельвины, далее в цельсий <=> фаренгейты
-        val temp: Int = if (!FLAG_FAHRENHEIT) {
-            converterWeather.calculationKelvin(((value - 32) * 5 / 9 + 273.15))
+        val temp = if (isFahrenheit) {
+            converterWeather.calculationFahrenheit(value)
         } else {
-            converterWeather.calculationKelvin((value + 273.15))
+            converterWeather.calculationCelsius(value)
         }
 
         viewState?.showNewDegrees(temp)
@@ -163,9 +162,7 @@ constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess { res -> saveWeatherInDb(res) }
             .subscribe(
-                { res ->
-                    setData(res, LOAD_CITY)
-                },
+                { res -> setData(res, LOAD_CITY) },
                 {
                     Log.d(Const.TAG_WEATHER, "Presenter.getWeatherFromNetworkById error ${it.message}")
                     viewState?.showError()
@@ -208,9 +205,7 @@ constructor(
 
     private fun saveWeatherInDb(weatherModel: WeatherModel) {
         Log.d(Const.TAG_WEATHER, "Presenter.saveWeatherInDb")
-        thread {
-            repository.saveWeatherInDatabase(weatherModel)
-        }
+        thread { repository.saveWeatherInDatabase(weatherModel) }
     }
 
     private fun setData(weatherModel: WeatherModel, flagLoad: Int) {

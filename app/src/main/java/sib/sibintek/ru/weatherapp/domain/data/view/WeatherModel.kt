@@ -10,7 +10,7 @@ class WeatherModel(@PrimaryKey(autoGenerate = true)
     var name: String? = null,
 
     //Температура в цельсиях
-    var temp: Int? = null,
+    var temp: Double? = null,
     //Название погоды
     var description: String? = null,
     //Иконка погоды

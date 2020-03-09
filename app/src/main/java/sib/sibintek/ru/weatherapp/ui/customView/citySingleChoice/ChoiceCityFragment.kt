@@ -10,23 +10,18 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import dagger.android.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_choice_city.*
 import sib.sibintek.ru.weatherapp.R
-import sib.sibintek.ru.weatherapp.domain.data.api.City
 import sib.sibintek.ru.weatherapp.domain.data.api.ListCity
-import sib.sibintek.ru.weatherapp.domain.repository.WeatherRepository
+import sib.sibintek.ru.weatherapp.tools.Const
 import sib.sibintek.ru.weatherapp.tools.Const.FLAG_JSON_PARSING
-import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherPresenter
 import java.io.IOException
-import java.util.*
-import javax.inject.Inject
 import kotlin.concurrent.thread
-
 
 class ChoiceCityFragment : DialogFragment() {
 
     companion object {
-        val TAG_CHOICE_CITY = "ChoiceCityFragment_TAG"
+        const val TAG_CHOICE_CITY = "ChoiceCityFragment_TAG"
     }
 
     private var cityList = ListCity()
@@ -36,24 +31,27 @@ class ChoiceCityFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val v: View = inflater.inflate(R.layout.fragment_choice_city, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_choice_city, container, false)
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val adapter = CityRecycler(callbackListener, cityList.items)
-        val cityRecycler = v.findViewById(R.id.city_recycler) as RecyclerView
+        val cityRecycler = view.findViewById(R.id.city_recycler) as RecyclerView
         cityRecycler.layoutManager = LinearLayoutManager(this.activity)
         cityRecycler.adapter = adapter
-        return v
+        cancel.setOnClickListener { dismiss() }
     }
 
     fun addListener(callbackListener: CityHolder.CallbackItemClick) {
         this.callbackListener = callbackListener
     }
 
-    fun parseCityJson(activity: Activity){
+    fun parseCityJson(activity: Activity) {
+        Log.d(Const.TAG_WEATHER, "ChoiceCityFragment.parseCityJson - start")
         thread {
             val listModels = ListCity()
-            val gson = Gson()
-            val model = gson.fromJson(loadJSONFromAssets(activity), ListCity::class.java)
+            val model = Gson().fromJson(loadJSONFromAssets(activity), ListCity::class.java)
 
             model.items.forEach {
                 if (it.getCountry().equals("RU"))
@@ -62,6 +60,7 @@ class ChoiceCityFragment : DialogFragment() {
             activity.runOnUiThread {
                 this.cityList = model
                 FLAG_JSON_PARSING = true
+                Log.d(Const.TAG_WEATHER, "ChoiceCityFragment.parseCityJson - finish")
             }
         }
     }

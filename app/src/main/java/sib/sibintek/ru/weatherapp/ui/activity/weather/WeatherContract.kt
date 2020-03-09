@@ -9,7 +9,7 @@ interface WeatherContract {
         fun showLoading()
         fun showError()
         fun showMessage(idRecourse: Int)
-        fun showNewDegrees(value: Int)
+        fun showNewDegrees(value: Double)
 
         fun createLocationListenerAndGetLocal()
     }
@@ -19,7 +19,7 @@ interface WeatherContract {
         fun onRefreshed()
         fun onDestroy()
 
-        fun clickSwitchTemp(value: Int)
+        fun clickSwitchTemp(value: Double, isFahrenheit: Boolean)
         fun clickSwitchCity(idCity: Int)
         fun clickMyLocation()
         fun permissionDenied()
