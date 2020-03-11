@@ -22,6 +22,9 @@ class ChoiceCityFragment : DialogFragment() {
 
     companion object {
         const val TAG_CHOICE_CITY = "ChoiceCityFragment_TAG"
+        //test
+        //test2
+        //test3
     }
 
     private var cityList = ListCity()
