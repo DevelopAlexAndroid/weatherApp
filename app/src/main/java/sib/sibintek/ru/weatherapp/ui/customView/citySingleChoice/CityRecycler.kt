@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import sib.sibintek.ru.weatherapp.R
-import sib.sibintek.ru.weatherapp.domain.data.api.City
+import sib.sibintek.ru.weatherapp.data.data.api.City
 
 
 class CityRecycler(

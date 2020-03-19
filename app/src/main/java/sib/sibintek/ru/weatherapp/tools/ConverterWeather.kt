@@ -1,7 +1,7 @@
 package sib.sibintek.ru.weatherapp.tools
 
-import sib.sibintek.ru.weatherapp.domain.data.api.ApiWeatherModel
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.data.api.ApiWeatherModel
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 import sib.sibintek.ru.weatherapp.tools.Const.CALL_SUCCES
 
 class ConverterWeather {

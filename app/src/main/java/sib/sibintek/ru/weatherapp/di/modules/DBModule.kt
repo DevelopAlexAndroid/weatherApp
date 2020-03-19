@@ -4,7 +4,7 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import sib.sibintek.ru.weatherapp.App
-import sib.sibintek.ru.weatherapp.domain.database.AppDatabase
+import sib.sibintek.ru.weatherapp.data.database.AppDatabase
 
 @Module
  class DBModule {

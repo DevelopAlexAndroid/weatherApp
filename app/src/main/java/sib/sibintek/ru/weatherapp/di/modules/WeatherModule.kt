@@ -4,10 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import sib.sibintek.ru.weatherapp.di.ActivityScope
-import sib.sibintek.ru.weatherapp.domain.ApiWeather
-import sib.sibintek.ru.weatherapp.domain.database.AppDatabase
-import sib.sibintek.ru.weatherapp.domain.database.WeatherDao
-import sib.sibintek.ru.weatherapp.domain.repository.WeatherRepository
+import sib.sibintek.ru.weatherapp.data.ApiWeather
+import sib.sibintek.ru.weatherapp.data.database.AppDatabase
+import sib.sibintek.ru.weatherapp.data.repository.WeatherRepository
 import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherContract
 import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherPresenter
 import javax.inject.Singleton

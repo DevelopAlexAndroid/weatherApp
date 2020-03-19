@@ -16,8 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        android:fullBackupContent="false"
-        android:screenOrientation="portrait">
+        android:fullBackupContent="false">
 
         <activity android:name="sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherActivity">
             <intent-filter>

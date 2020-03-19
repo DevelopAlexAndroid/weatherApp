@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import sib.sibintek.ru.weatherapp.domain.ApiWeather
+import sib.sibintek.ru.weatherapp.data.ApiWeather
 import javax.inject.Singleton
 
 

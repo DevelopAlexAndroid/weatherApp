@@ -1,11 +1,11 @@
-package sib.sibintek.ru.weatherapp.domain.database
+package sib.sibintek.ru.weatherapp.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Single
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 
 @Dao
 interface WeatherDao  {

@@ -10,13 +10,11 @@ import com.google.android.gms.location.LocationServices
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_weather.*
 import sib.sibintek.ru.weatherapp.R
-
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 import sib.sibintek.ru.weatherapp.provides.GeolocationStatus
 import sib.sibintek.ru.weatherapp.provides.LocationProviders
 import sib.sibintek.ru.weatherapp.provides.LocationProviders.Companion.PERMISSION_ID
 import sib.sibintek.ru.weatherapp.tools.Const
-import sib.sibintek.ru.weatherapp.tools.Const.FLAG_JSON_PARSING
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment.Companion.TAG_CHOICE_CITY
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.CityHolder
@@ -28,9 +26,9 @@ class WeatherActivity : DaggerAppCompatActivity(),
     CityHolder.CallbackItemClick {
 
     @Inject
-    lateinit var presenter: WeatherPresenter
+    lateinit var presenter: WeatherContract.Presenter
 
-    private var fragment = ChoiceCityFragment()
+    private var fragment = ChoiceCityFragment(this)
     private var locationProviders = LocationProviders()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,12 +118,10 @@ class WeatherActivity : DaggerAppCompatActivity(),
 
     private fun addListener() {
         switch_city.setOnClickListener {
-            if (FLAG_JSON_PARSING && !fragment.isAdded) {
-                fragment.addListener(this)
-                fragment.show(supportFragmentManager, TAG_CHOICE_CITY)
-            } else {
+            if (fragment.statusJsonParsing) {
+                if (!fragment.isAdded) fragment.show(supportFragmentManager, TAG_CHOICE_CITY)
+            } else
                 showMessage(R.string.loading_city)
-            }
         }
         geolocation.setOnClickListener { presenter.clickMyLocation() }
         switch_C.setOnClickListener {

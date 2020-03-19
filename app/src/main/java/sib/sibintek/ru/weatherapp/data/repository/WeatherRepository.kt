@@ -1,10 +1,10 @@
-package sib.sibintek.ru.weatherapp.domain.repository
+package sib.sibintek.ru.weatherapp.data.repository
 
 import io.reactivex.Single
-import sib.sibintek.ru.weatherapp.domain.ApiWeather
-import sib.sibintek.ru.weatherapp.domain.data.api.ApiWeatherModel
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
-import sib.sibintek.ru.weatherapp.domain.database.AppDatabase
+import sib.sibintek.ru.weatherapp.data.ApiWeather
+import sib.sibintek.ru.weatherapp.data.data.api.ApiWeatherModel
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.database.AppDatabase
 import sib.sibintek.ru.weatherapp.tools.Const.KEY_API
 import javax.inject.Inject
 

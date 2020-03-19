@@ -1,9 +1,9 @@
-package sib.sibintek.ru.weatherapp.domain
+package sib.sibintek.ru.weatherapp.data
 
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
-import sib.sibintek.ru.weatherapp.domain.data.api.ApiWeatherModel
+import sib.sibintek.ru.weatherapp.data.data.api.ApiWeatherModel
 
 /**
  * Ключ аккаунта

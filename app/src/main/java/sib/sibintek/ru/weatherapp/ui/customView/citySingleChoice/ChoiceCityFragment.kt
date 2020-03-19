@@ -12,23 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_choice_city.*
 import sib.sibintek.ru.weatherapp.R
-import sib.sibintek.ru.weatherapp.domain.data.api.ListCity
+import sib.sibintek.ru.weatherapp.data.data.api.ListCity
 import sib.sibintek.ru.weatherapp.tools.Const
-import sib.sibintek.ru.weatherapp.tools.Const.FLAG_JSON_PARSING
 import java.io.IOException
 import kotlin.concurrent.thread
 
-class ChoiceCityFragment : DialogFragment() {
+class ChoiceCityFragment(private val callbackListener: CityHolder.CallbackItemClick) :
+    DialogFragment() {
 
     companion object {
         const val TAG_CHOICE_CITY = "ChoiceCityFragment_TAG"
-        //test
-        //test2
-        //test3
     }
 
     private var cityList = ListCity()
-    private lateinit var callbackListener: CityHolder.CallbackItemClick
+    //Флаг говорящий статус обработки json из файла
+    var statusJsonParsing = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +44,6 @@ class ChoiceCityFragment : DialogFragment() {
         cancel.setOnClickListener { dismiss() }
     }
 
-    fun addListener(callbackListener: CityHolder.CallbackItemClick) {
-        this.callbackListener = callbackListener
-    }
-
     fun parseCityJson(activity: Activity) {
         Log.d(Const.TAG_WEATHER, "ChoiceCityFragment.parseCityJson - start")
         thread {
@@ -57,12 +51,12 @@ class ChoiceCityFragment : DialogFragment() {
             val model = Gson().fromJson(loadJSONFromAssets(activity), ListCity::class.java)
 
             model.items.forEach {
-                if (it.getCountry().equals("RU"))
+                if (it.country == "RU")
                     listModels.items.add(it)
             }
             activity.runOnUiThread {
-                this.cityList = model
-                FLAG_JSON_PARSING = true
+                this.cityList = listModels
+                statusJsonParsing = true
                 Log.d(Const.TAG_WEATHER, "ChoiceCityFragment.parseCityJson - finish")
             }
         }
@@ -79,6 +73,7 @@ class ChoiceCityFragment : DialogFragment() {
 
             json = String(buffer, Charsets.UTF_8)
         } catch (e: IOException) {
+            Log.d(Const.TAG_WEATHER, "ChoiceCityFragment.loadJSONFromAssets - fail")
             e.printStackTrace()
         }
 

@@ -5,8 +5,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import sib.sibintek.ru.weatherapp.R
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
-import sib.sibintek.ru.weatherapp.domain.repository.WeatherRepository
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.repository.WeatherRepository
 import sib.sibintek.ru.weatherapp.tools.Const
 import sib.sibintek.ru.weatherapp.tools.Const.CALL_SUCCES
 import sib.sibintek.ru.weatherapp.tools.Const.FIRST_START
@@ -37,7 +37,6 @@ constructor(
     override fun onCreate(viewState: WeatherContract.View) {
         Log.d(Const.TAG_WEATHER, "Presenter.onCreate")
         this.viewState = viewState
-        viewState.showLoading()
         //Обновления погоды
         updateData()
     }
@@ -164,7 +163,10 @@ constructor(
             .subscribe(
                 { res -> setData(res, LOAD_CITY) },
                 {
-                    Log.d(Const.TAG_WEATHER, "Presenter.getWeatherFromNetworkById error ${it.message}")
+                    Log.d(
+                        Const.TAG_WEATHER,
+                        "Presenter.getWeatherFromNetworkById error ${it.message}"
+                    )
                     viewState?.showError()
                 }
             ))
@@ -183,7 +185,10 @@ constructor(
                     setData(res, LOAD_GEOLOCATION)
                 },
                 {
-                    Log.d(Const.TAG_WEATHER, "Presenter.getWeatherFromNetworkByLocation error ${it.message}")
+                    Log.d(
+                        Const.TAG_WEATHER,
+                        "Presenter.getWeatherFromNetworkByLocation error ${it.message}"
+                    )
                     viewState?.showError()
                 }
             ))
@@ -197,7 +202,10 @@ constructor(
             .subscribe(
                 { res -> setData(res, LOAD_DATA_FROM_DATABASE) },
                 {
-                    Log.d(Const.TAG_WEATHER, "Presenter.getWeatherFromDatabase error ${it.message}")
+                    Log.d(
+                        Const.TAG_WEATHER,
+                        "Presenter.getWeatherFromDatabase error ${it.message}"
+                    )
                     viewState?.showError()
                 }
             ))
@@ -210,7 +218,6 @@ constructor(
 
     private fun setData(weatherModel: WeatherModel, flagLoad: Int) {
         if (weatherModel.cod == CALL_SUCCES) {
-           // weatherModel.temp = converterWeather.calculationKelvin(weatherModel.temp?.toDouble()!!)
             viewState?.setData(weatherModel)
         } else
             viewState?.showError()

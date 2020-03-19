@@ -1,10 +1,13 @@
-package sib.sibintek.ru.weatherapp.domain.data.view
+package sib.sibintek.ru.weatherapp.data.data.view
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class WeatherModel(@PrimaryKey(autoGenerate = true)
+class WeatherModel(
+    @PrimaryKey
+    var number: Long = 1L,
+
     var id: Int? = null,
     var cod: Int? = null,
     var name: String? = null,

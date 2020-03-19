@@ -1,6 +1,6 @@
 package sib.sibintek.ru.weatherapp.ui.activity.weather
 
-import sib.sibintek.ru.weatherapp.domain.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 
 interface WeatherContract {
 

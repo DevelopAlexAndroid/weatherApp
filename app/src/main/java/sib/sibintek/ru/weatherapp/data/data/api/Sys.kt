@@ -1,4 +1,4 @@
-package sib.sibintek.ru.weatherapp.domain.data.api
+package sib.sibintek.ru.weatherapp.data.data.api
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
