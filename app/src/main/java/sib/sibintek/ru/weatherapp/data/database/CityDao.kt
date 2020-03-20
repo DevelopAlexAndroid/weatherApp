@@ -5,15 +5,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Single
-import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
+import sib.sibintek.ru.weatherapp.data.data.api.ListCity
 
 @Dao
-interface WeatherDao  {
-
-    @Query("SELECT * FROM WeatherModel")
-    fun getWeather(): Single<WeatherModel>
+interface CityDao {
+    @Query("SELECT * FROM ListCity")
+    fun getCity(): Single<ListCity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(weatherModel: WeatherModel)
-
+    fun insertCities(cities: ListCity)
 }

@@ -3,6 +3,7 @@ package sib.sibintek.ru.weatherapp.data.repository
 import io.reactivex.Single
 import sib.sibintek.ru.weatherapp.data.ApiWeather
 import sib.sibintek.ru.weatherapp.data.data.api.ApiWeatherModel
+import sib.sibintek.ru.weatherapp.data.data.api.ListCity
 import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 import sib.sibintek.ru.weatherapp.data.database.AppDatabase
 import sib.sibintek.ru.weatherapp.tools.Const.KEY_API
@@ -31,6 +32,14 @@ constructor(
 
     fun saveWeatherInDatabase(weatherModel: WeatherModel) {
         appDatabase.weatherDao().insert(weatherModel)
+    }
+
+    fun getCityFromDatabase(): Single<ListCity> {
+        return appDatabase.citiesDao().getCity()
+    }
+
+    fun addCityInDatabase(listCities: ListCity) {
+        appDatabase.citiesDao().insertCities(listCities)
     }
 
 }

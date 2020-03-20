@@ -4,7 +4,7 @@
     <string name="geolocation">Мое местоположение</string>
     <string name="switch_city">Сменить город</string>
     <string name="local_normal">Данные загруженные ранее соответствуют вашей геопозиции</string>
-    <string name="city_normal">Данные по выбранному Вами городом уже отображаются</string>
+    <string name="city_normal">Данные по выбранному Вами городу уже отображаются</string>
     <string name="choice_city">Выберите город</string>
     <string name="message_error">Что-то пошло не так.\nПопробуйте позже.</string>
     <string name="o">o</string>
@@ -18,5 +18,5 @@
     <string name="cancel">Отмена</string>
     <string name="loading_city">Загрузка городов ещё не закончена</string>
     <string name="image_weather">картинка погоды</string>
-    <string name="image_geolocation">значок местополодения</string>
+    <string name="image_geolocation">значок местоположения</string>
 </resources>

@@ -11,7 +11,7 @@ import sib.sibintek.ru.weatherapp.data.data.api.City
 
 class CityRecycler(
     private var callbackListener: CityHolder.CallbackItemClick,
-    private var cityList: List<City>
+    private var cityList: ArrayList<City>
 ) : RecyclerView.Adapter<CityHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
@@ -26,6 +26,11 @@ class CityRecycler(
 
     override fun getItemCount(): Int {
         return cityList.size
+    }
+
+    fun addCityList(cityList: ArrayList<City>) {
+        this.cityList = cityList
+        notifyDataSetChanged()
     }
 
 }

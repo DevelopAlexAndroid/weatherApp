@@ -2,14 +2,14 @@ package sib.sibintek.ru.weatherapp.tools
 
 import sib.sibintek.ru.weatherapp.data.data.api.ApiWeatherModel
 import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
-import sib.sibintek.ru.weatherapp.tools.Const.CALL_SUCCES
+import sib.sibintek.ru.weatherapp.tools.Const.CALL_SUCCESS
 
 class ConverterWeather {
 
     fun convertApiWeather(apiWeatherModel: ApiWeatherModel): WeatherModel {
         val weatherModel = WeatherModel()
         weatherModel.cod = apiWeatherModel.cod
-        if (weatherModel.cod == CALL_SUCCES) {
+        if (weatherModel.cod == CALL_SUCCESS) {
             weatherModel.description = apiWeatherModel.weather?.get(0)?.description
             weatherModel.speedWind = apiWeatherModel.wind?.speed
             weatherModel.humidity = apiWeatherModel.main?.humidity

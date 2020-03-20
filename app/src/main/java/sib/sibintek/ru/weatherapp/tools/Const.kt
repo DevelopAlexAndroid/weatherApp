@@ -23,7 +23,7 @@ object Const {
     const val LOAD_DATA_FROM_DATABASE = 666
     const val LOAD_CITY_DEFAULT_KRASNODAR = 542420
     //Код удачного ответа сервера
-    const val CALL_SUCCES = 200
+    const val CALL_SUCCESS = 200
 
     /**Время по истечению которого, данные в базе будут считаться устаревшими*/
     const val TIME_CORRECT_DATA = 10 * 60 * 1000
