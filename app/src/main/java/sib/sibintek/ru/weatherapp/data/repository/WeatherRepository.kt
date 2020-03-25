@@ -12,17 +12,17 @@ import javax.inject.Inject
 class WeatherRepository
 @Inject
 constructor(
-    private var apiWeather: ApiWeather?,
+    private var apiWeather: ApiWeather,
     private var appDatabase: AppDatabase
 ) {
 
     //network
     fun getWeatherFromNetworkById(idCity: Int): Single<ApiWeatherModel> {
-        return apiWeather!!.getWeatherByid(idCity, KEY_API)
+        return apiWeather.getWeatherByid(idCity, KEY_API)
     }
 
     fun getWeatherFromNetworkByLocation(lat: Double, lon: Double): Single<ApiWeatherModel> {
-        return apiWeather!!.getWeatherByLocation(lat, lon, KEY_API)
+        return apiWeather.getWeatherByLocation(lat, lon, KEY_API)
     }
 
     //database
@@ -38,7 +38,7 @@ constructor(
         return appDatabase.citiesDao().getCity()
     }
 
-    fun addCityInDatabase(listCities: ListCity) {
+    fun saveCityInDatabase(listCities: ListCity) {
         appDatabase.citiesDao().insertCities(listCities)
     }
 

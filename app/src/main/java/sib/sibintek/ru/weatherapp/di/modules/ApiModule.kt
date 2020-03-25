@@ -16,26 +16,26 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun getApiInterface(retrofit: Retrofit?): ApiWeather? {
-        return retrofit?.create<ApiWeather>(ApiWeather::class.java)
+    fun getApiInterface(retrofit: Retrofit): ApiWeather {
+        return retrofit.create(ApiWeather::class.java)
     }
 
     @Provides
     @Singleton
-    fun getRetrofit(okHttpClient: OkHttpClient?): Retrofit? {
+    fun getRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://samples.openweathermap.org/data/2.5/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient!!)
+            .client(okHttpClient)
             .build()
     }
 
     @Provides
     @Singleton
-    fun getOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor?): OkHttpClient {
+    fun getOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor!!)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
     }
 

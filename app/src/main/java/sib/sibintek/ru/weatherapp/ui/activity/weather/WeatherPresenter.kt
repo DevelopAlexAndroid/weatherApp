@@ -20,7 +20,7 @@ import sib.sibintek.ru.weatherapp.tools.Const.LOAD_GEOLOCATION
 import sib.sibintek.ru.weatherapp.tools.Const.TAG_WEATHER
 import sib.sibintek.ru.weatherapp.tools.Const.TIME_CORRECT_DATA
 import sib.sibintek.ru.weatherapp.tools.ConverterWeather
-import sib.sibintek.ru.weatherapp.tools.UiTolls
+import sib.sibintek.ru.weatherapp.tools.SharedPrefTolls
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
@@ -29,7 +29,7 @@ class WeatherPresenter
 constructor(
     private var repository: WeatherRepository,
     private var converterWeather: ConverterWeather,
-    private var uiTolls: UiTolls
+    private var sharedPrefTolls: SharedPrefTolls
 ) : WeatherContract.Presenter {
 
     private var viewState: WeatherContract.View? = null
@@ -47,7 +47,7 @@ constructor(
 
     override fun onRefreshed() {
         //Обнуляем последнее время запроса, так как пользователь принудительно обновляет экран
-        uiTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
+        sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
         updateData()
     }
 
@@ -72,11 +72,11 @@ constructor(
 
     override fun clickSwitchCity(idCity: Int) {
         Log.d(TAG_WEATHER, "Presenter.clickSwitchCity id city")
-        if (idCity != uiTolls.getValueInt(KEY_USER_CHOICE_CITY)) {
+        if (idCity != sharedPrefTolls.getValueInt(KEY_USER_CHOICE_CITY)) {
             //Обнуляем последнее время запроса, так как пользователь меняет точку сбора данных
-            uiTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
+            sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
             //Обновляем данные о выбранном городе
-            uiTolls.saveValueInt(KEY_USER_CHOICE_CITY, idCity)
+            sharedPrefTolls.saveValueInt(KEY_USER_CHOICE_CITY, idCity)
             choiceCity()
         } else {
             viewState?.showMessage(R.string.city_normal)
@@ -93,11 +93,11 @@ constructor(
 
     override fun clickMyLocation() {
         Log.d(TAG_WEATHER, "Presenter.clickMyLocation")
-        if (uiTolls.getValueInt(KEY_LOCATION_OR_CITY) == LOAD_GEOLOCATION)
+        if (sharedPrefTolls.getValueInt(KEY_LOCATION_OR_CITY) == LOAD_GEOLOCATION)
             viewState?.showMessage(R.string.local_normal)
         else {
             //Обнуляем последнее время запроса, так как пользователь меняет точку сбора данных
-            uiTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
+            sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
             choiceGeolocation()
         }
     }
@@ -108,7 +108,7 @@ constructor(
         Log.d(TAG_WEATHER, "Presenter.permissionDenied")
         //Чтобы избежать частный случай с намеренным отключением доступа приложения к геолокации
         //обнуляем последнее время запроса
-        uiTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
+        sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
         //В таком случае надо отобразить данные по городу
         choiceCity()
     }
@@ -121,6 +121,11 @@ constructor(
             getWeatherFromDatabase()
     }
 
+    override fun citiesLoading(cities: ListCity) {
+        this.cities = cities
+        repository.saveCityInDatabase(cities)
+    }
+
     private fun updateData() {
         /**Проверка флага обновления данных*/
         if (checkKeyUpdateData()) choiceGeolocation()     //get data by geolocation
@@ -128,7 +133,7 @@ constructor(
     }
 
     private fun checkKeyUpdateData(): Boolean {
-        val navigationLoad = uiTolls.getValueInt(KEY_LOCATION_OR_CITY)
+        val navigationLoad = sharedPrefTolls.getValueInt(KEY_LOCATION_OR_CITY)
         //Если первый запуск, то приоритет на загрузку по геолокации.
         return navigationLoad == FIRST_START || navigationLoad == LOAD_GEOLOCATION
         //Иначе navigationLoad = LOAD_CITY
@@ -151,12 +156,12 @@ constructor(
 
     //Проверка был ли выбран город пользователем, иначе загружаем Краснодар
     private fun checkUserChoiceCity(): Int {
-        val userChoice = uiTolls.getValueInt(KEY_USER_CHOICE_CITY)
+        val userChoice = sharedPrefTolls.getValueInt(KEY_USER_CHOICE_CITY)
         return if (userChoice == FIRST_START) LOAD_CITY_DEFAULT_KRASNODAR else userChoice
     }
 
     private fun checkLastCallTime(): Boolean {
-        val timeLastCall = uiTolls.getValueLong(KEY_TIME_LAST_CAll)
+        val timeLastCall = sharedPrefTolls.getValueLong(KEY_TIME_LAST_CAll)
         return (timeLastCall == FIRST_START.toLong() ||
                 ((timeLastCall + TIME_CORRECT_DATA) < System.currentTimeMillis()))
     }
@@ -189,7 +194,7 @@ constructor(
             .doOnSuccess { res -> saveWeatherInDb(res) }
             .subscribe(
                 { res ->
-                    uiTolls.saveValueInt(KEY_USER_CHOICE_CITY, FIRST_START)
+                    sharedPrefTolls.saveValueInt(KEY_USER_CHOICE_CITY, FIRST_START)
                     setData(res, LOAD_GEOLOCATION)
                 },
                 {
@@ -227,10 +232,10 @@ constructor(
 
         if (flagLoad != LOAD_DATA_FROM_DATABASE) {
             //Устанавливаем последнее время запроса
-            uiTolls.saveValueLong(KEY_TIME_LAST_CAll, System.currentTimeMillis())
+            sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, System.currentTimeMillis())
             Log.d(TAG_WEATHER, "Presenter.set_KEY_TIME_LAST_CAll")
             //Устанавливаем флаг для навигации при старте
-            uiTolls.saveValueInt(KEY_LOCATION_OR_CITY, flagLoad)
+            sharedPrefTolls.saveValueInt(KEY_LOCATION_OR_CITY, flagLoad)
             Log.d(TAG_WEATHER, "Presenter.set_KEY_LOCATION_OR_CITY = $flagLoad")
         }
     }
@@ -251,8 +256,4 @@ constructor(
             ))
     }
 
-    override fun citiesLoading(cities: ListCity) {
-        this.cities = cities
-        repository.addCityInDatabase(cities)
-    }
 }

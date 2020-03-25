@@ -17,8 +17,8 @@ import sib.sibintek.ru.weatherapp.data.data.view.WeatherModel
 import sib.sibintek.ru.weatherapp.provides.GeolocationStatus
 import sib.sibintek.ru.weatherapp.provides.LocationProviders
 import sib.sibintek.ru.weatherapp.provides.LocationProviders.Companion.PERMISSION_ID
+import sib.sibintek.ru.weatherapp.tools.AssetsParser
 import sib.sibintek.ru.weatherapp.tools.Const.TAG_WEATHER
-import sib.sibintek.ru.weatherapp.tools.UiTolls
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragment.Companion.TAG_CHOICE_CITY
 import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.CityHolder
@@ -33,11 +33,9 @@ class WeatherActivity : DaggerAppCompatActivity(),
     @Inject
     lateinit var presenter: WeatherContract.Presenter
 
-    @Inject
-    lateinit var uiTolls: UiTolls
-
     private var fragment = ChoiceCityFragment(this)
     private var locationProviders = LocationProviders()
+    private val assetsParser: AssetsParser by lazy { AssetsParser() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +63,7 @@ class WeatherActivity : DaggerAppCompatActivity(),
         switchClickable(false)
         temp.text = weatherModel.temp.toString().substringBefore(".")
 
-        image_weather.setImageResource(uiTolls.getImage(weatherModel.icon!!))
+        image_weather.setImageResource(getImage(weatherModel.icon!!))
         visibleUi(View.VISIBLE, View.INVISIBLE, View.GONE)
     }
 
@@ -102,7 +100,6 @@ class WeatherActivity : DaggerAppCompatActivity(),
                 locationProviders.getLastLocation(this)
             else
                 presenter.permissionDenied()
-
         }
     }
 
@@ -122,6 +119,22 @@ class WeatherActivity : DaggerAppCompatActivity(),
         if (!fragment.isAdded) {
             fragment.addedListCities(cities as ArrayList<City>)
             fragment.show(supportFragmentManager, TAG_CHOICE_CITY)
+        }
+    }
+
+    override fun loadCities() {
+        thread {
+            Log.d(TAG_WEATHER, "WeatherActivity.loadCities - start")
+            val listModels = ListCity()
+            val model = Gson().fromJson(assetsParser.loadJSONFromAssets(this), ListCity::class.java)
+            listModels.listCities = ArrayList()
+            //Только Русские города
+            model.listCities?.forEach {
+                if (it.country == "RU")
+                    (listModels.listCities as ArrayList<City>).add(it)
+            }
+            presenter.citiesLoading(listModels)
+            Log.d(TAG_WEATHER, "WeatherActivity.loadCities - finish")
         }
     }
 
@@ -161,18 +174,12 @@ class WeatherActivity : DaggerAppCompatActivity(),
         switch_C.isClickable = isFahrenheit
     }
 
-    override fun loadCities() {
-        thread {
-            Log.d(TAG_WEATHER, "WeatherActivity.loadCities - start")
-            val listModels = ListCity()
-            val model = Gson().fromJson(uiTolls.loadJSONFromAssets(this), ListCity::class.java)
-            listModels.listCities = ArrayList()
-            model.listCities?.forEach {
-                if (it.country == "RU")
-                    (listModels.listCities as ArrayList<City>).add(it)
-            }
-            presenter.citiesLoading(listModels)
-            Log.d(TAG_WEATHER, "WeatherActivity.loadCities - finish")
+
+    private fun getImage(key: String): Int {
+        return when (key) {
+            "01n" -> R.drawable.sun
+            "03n" -> R.drawable.cloud
+            else -> R.drawable.def
         }
     }
 

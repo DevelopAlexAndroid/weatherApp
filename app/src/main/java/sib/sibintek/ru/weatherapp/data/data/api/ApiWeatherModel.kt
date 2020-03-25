@@ -20,7 +20,6 @@ class ApiWeatherModel {
     @SerializedName("dt")
     @Expose
     val dt: Int? = null
-
     @SerializedName("coord")
     @Expose
     val coord: Coord? = null
