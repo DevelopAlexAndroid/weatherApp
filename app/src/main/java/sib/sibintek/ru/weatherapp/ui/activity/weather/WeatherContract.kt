@@ -19,7 +19,7 @@ interface WeatherContract {
     }
 
     interface Presenter {
-        fun onCreate(viewState: View)
+        fun onCreate()
         fun onRefreshed()
         fun onDestroy()
 

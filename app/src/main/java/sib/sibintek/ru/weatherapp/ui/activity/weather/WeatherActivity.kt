@@ -40,13 +40,22 @@ class WeatherActivity : DaggerAppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
-        presenter.onCreate(this)
+        presenter.onCreate()
         addListener()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == PERMISSION_ID) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED))
+                locationProviders.getLastLocation(this)
+            else
+                presenter.permissionDenied()
+        }
     }
 
     override fun setData(weatherModel: WeatherModel) {
@@ -88,19 +97,6 @@ class WeatherActivity : DaggerAppCompatActivity(),
     override fun createLocationListenerAndGetLocal() {
         locationProviders.constructor(this, LocationServices.getFusedLocationProviderClient(this))
         locationProviders.getLastLocation(this)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_ID) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED))
-                locationProviders.getLastLocation(this)
-            else
-                presenter.permissionDenied()
-        }
     }
 
     //Callback запроса новой геолокации
@@ -173,7 +169,6 @@ class WeatherActivity : DaggerAppCompatActivity(),
         switch_F.isClickable = !isFahrenheit
         switch_C.isClickable = isFahrenheit
     }
-
 
     private fun getImage(key: String): Int {
         return when (key) {

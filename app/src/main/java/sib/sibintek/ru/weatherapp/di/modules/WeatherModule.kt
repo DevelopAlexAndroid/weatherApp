@@ -7,6 +7,7 @@ import sib.sibintek.ru.weatherapp.di.ActivityScope
 import sib.sibintek.ru.weatherapp.data.ApiWeather
 import sib.sibintek.ru.weatherapp.data.database.AppDatabase
 import sib.sibintek.ru.weatherapp.data.repository.WeatherRepository
+import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherActivity
 import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherContract
 import sib.sibintek.ru.weatherapp.ui.activity.weather.WeatherPresenter
 import javax.inject.Singleton
@@ -16,7 +17,11 @@ abstract class WeatherModule {
 
     @ActivityScope
     @Binds
-    abstract fun providesPresenter(weatherPresenter: WeatherPresenter): WeatherContract.Presenter
+    abstract fun bindsPresenter(weatherPresenter: WeatherPresenter): WeatherContract.Presenter
+
+    @ActivityScope
+    @Binds
+    abstract fun bindsView(weatherActivity: WeatherActivity): WeatherContract.View
 
     @Module
     companion object {

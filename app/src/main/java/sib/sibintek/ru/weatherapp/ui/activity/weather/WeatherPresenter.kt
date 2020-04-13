@@ -27,18 +27,17 @@ import kotlin.concurrent.thread
 class WeatherPresenter
 @Inject
 constructor(
+    private var viewState: WeatherContract.View,
     private var repository: WeatherRepository,
     private var converterWeather: ConverterWeather,
     private var sharedPrefTolls: SharedPrefTolls
 ) : WeatherContract.Presenter {
 
-    private var viewState: WeatherContract.View? = null
     private var compositeDisposable = CompositeDisposable()
-    var cities = ListCity()
+    private var cities = ListCity()
 
-    override fun onCreate(viewState: WeatherContract.View) {
+    override fun onCreate() {
         Log.d(TAG_WEATHER, "Presenter.onCreate")
-        this.viewState = viewState
         //Обновления погоды
         updateData()
         //Проверка базы данных на наличие в ней списка городов, если то загружаем
@@ -53,21 +52,18 @@ constructor(
 
     override fun onDestroy() {
         Log.d(TAG_WEATHER, "Presenter.onDestroy")
-        viewState = null
         compositeDisposable.clear()
     }
 
     override fun clickSwitchTemp(value: Double, isFahrenheit: Boolean) {
         Log.d(TAG_WEATHER, "Presenter.clickSwitchButton")
         //Преобразования в кельвины, далее в цельсий <=> фаренгейты
-        val temp = if (isFahrenheit) {
+        val temp = if (isFahrenheit)
             converterWeather.calculationFahrenheit(value)
-        } else {
+         else
             converterWeather.calculationCelsius(value)
-        }
 
-        viewState?.showNewDegrees(temp)
-        Log.d(TAG_WEATHER, "Presenter.clickSwitchButton  --  $temp")
+        viewState.showNewDegrees(temp)
     }
 
     override fun clickSwitchCity(idCity: Int) {
@@ -79,22 +75,22 @@ constructor(
             sharedPrefTolls.saveValueInt(KEY_USER_CHOICE_CITY, idCity)
             choiceCity()
         } else {
-            viewState?.showMessage(R.string.city_normal)
+            viewState.showMessage(R.string.city_normal)
         }
     }
 
     override fun clickSwitchCity() {
         Log.d(TAG_WEATHER, "Presenter.clickSwitchCity button")
         if (!cities.listCities.isNullOrEmpty())
-            viewState?.startChoiceFragment(cities.listCities!!)
+            viewState.startChoiceFragment(cities.listCities!!)
         else
-            viewState?.showMessage(R.string.loading_city)
+            viewState.showMessage(R.string.loading_city)
     }
 
     override fun clickMyLocation() {
         Log.d(TAG_WEATHER, "Presenter.clickMyLocation")
         if (sharedPrefTolls.getValueInt(KEY_LOCATION_OR_CITY) == LOAD_GEOLOCATION)
-            viewState?.showMessage(R.string.local_normal)
+            viewState.showMessage(R.string.local_normal)
         else {
             //Обнуляем последнее время запроса, так как пользователь меняет точку сбора данных
             sharedPrefTolls.saveValueLong(KEY_TIME_LAST_CAll, FIRST_START.toLong())
@@ -128,8 +124,10 @@ constructor(
 
     private fun updateData() {
         /**Проверка флага обновления данных*/
-        if (checkKeyUpdateData()) choiceGeolocation()     //get data by geolocation
-        else choiceCity()                                 //get data by city
+        if (checkKeyUpdateData())
+            choiceGeolocation()     //get data by geolocation
+        else
+            choiceCity()            //get data by city
     }
 
     private fun checkKeyUpdateData(): Boolean {
@@ -141,13 +139,13 @@ constructor(
 
     private fun choiceGeolocation() {
         Log.d(TAG_WEATHER, "Presenter.choiceGeolocation")
-        viewState?.showLoading()
-        viewState?.createLocationListenerAndGetLocal()
+        viewState.showLoading()
+        viewState.createLocationListenerAndGetLocal()
     }
 
     private fun choiceCity() {
         Log.d(TAG_WEATHER, "Presenter.choiceCity")
-        viewState?.showLoading()
+        viewState.showLoading()
         val idCity = checkUserChoiceCity()
         //Проверка времени последней записи в БД, если больше 10 минут, то обновляем
         if (checkLastCallTime()) getWeatherFromNetworkById(idCity)
@@ -176,11 +174,8 @@ constructor(
             .subscribe(
                 { res -> setData(res, LOAD_CITY) },
                 {
-                    Log.d(
-                        TAG_WEATHER,
-                        "Presenter.getWeatherFromNetworkById error ${it.message}"
-                    )
-                    viewState?.showError()
+                    Log.d(TAG_WEATHER, "Presenter.getWeatherFromNetworkById error ${it.message}")
+                    viewState.showError()
                 }
             ))
     }
@@ -198,11 +193,8 @@ constructor(
                     setData(res, LOAD_GEOLOCATION)
                 },
                 {
-                    Log.d(
-                        TAG_WEATHER,
-                        "Presenter.getWeatherFromNetworkByLocation error ${it.message}"
-                    )
-                    viewState?.showError()
+                    Log.d(TAG_WEATHER, "Presenter.getWeatherFromNetworkByLocation error ${it.message}")
+                    viewState.showError()
                 }
             ))
     }
@@ -216,7 +208,7 @@ constructor(
                 { res -> setData(res, LOAD_DATA_FROM_DATABASE) },
                 {
                     Log.d(TAG_WEATHER, "Presenter.getWeatherFromDatabase error ${it.message}")
-                    viewState?.showError()
+                    viewState.showError()
                 }
             ))
     }
@@ -227,8 +219,8 @@ constructor(
     }
 
     private fun setData(weatherModel: WeatherModel, flagLoad: Int) {
-        if (weatherModel.cod == CALL_SUCCESS) viewState?.setData(weatherModel)
-        else viewState?.showError()
+        if (weatherModel.cod == CALL_SUCCESS) viewState.setData(weatherModel)
+        else viewState.showError()
 
         if (flagLoad != LOAD_DATA_FROM_DATABASE) {
             //Устанавливаем последнее время запроса
@@ -251,7 +243,7 @@ constructor(
                 },
                 {
                     Log.d(TAG_WEATHER, "Presenter.checkCitiesInDataBase - error ${it.message}")
-                    viewState?.loadCities()
+                    viewState.loadCities()
                 }
             ))
     }

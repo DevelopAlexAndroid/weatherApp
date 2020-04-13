@@ -16,9 +16,8 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun getApiInterface(retrofit: Retrofit): ApiWeather {
-        return retrofit.create(ApiWeather::class.java)
-    }
+    fun getApiInterface(retrofit: Retrofit):
+            ApiWeather = retrofit.create(ApiWeather::class.java)
 
     @Provides
     @Singleton

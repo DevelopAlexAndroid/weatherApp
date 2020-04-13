@@ -10,5 +10,5 @@ import sib.sibintek.ru.weatherapp.ui.customView.citySingleChoice.ChoiceCityFragm
 abstract class AppModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [WeatherModule::class])
-    abstract fun mainActivity(): WeatherActivity
+    abstract fun contributeWeatherActivity(): WeatherActivity
 }
